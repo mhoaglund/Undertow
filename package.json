@@ -1,0 +1,16 @@
+{
+  "name": "undertow",
+  "version": "1.0.0",
+  "description": "Procedural lit phone service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mhoaglund",
+  "license": "ISC",
+  "dependencies": {
+    "nconf": "^0.8.4",
+    "rita": "^1.1.35",
+    "twilio": "^2.9.1"
+  }
+}
