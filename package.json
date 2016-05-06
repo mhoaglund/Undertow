@@ -9,7 +9,6 @@
   "author": "mhoaglund",
   "license": "ISC",
   "dependencies": {
-    "nconf": "^0.8.4",
     "rita": "^1.1.35",
     "twilio": "^2.9.1"
   }
