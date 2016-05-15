@@ -1,14 +1,10 @@
-//var nconf = require('nconf'),
-var path = require('path'),
-rita = require("rita"),
+var rita = require("rita"),
 twilio = require('twilio');
-
-//nconf.argv().file({file: 'config.json'});
-//global.TwilioClient = require('twilio')(nconf.get('twilioAccountKey'), nconf.get('twilioAuthToken'));
 
 exports.handler = function(event, context) {
     var twiml = new twilio.TwimlResponse();
-    twiml.say({voice:'woman'}, 'Pain,,,,,Ruin');
+    twiml.say({voice:'woman'}, 'Oh,,,,,,');
+    twiml.say({voice:'woman'}, 'When it arrives you wont know');
     var output = '<?xml version="1.0" encoding="UTF-8"?>' + twiml.toString() + '</Response>';
     context.succeed(output);
 };
