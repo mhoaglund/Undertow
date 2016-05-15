@@ -36,5 +36,5 @@ pids
 node_modules
 jspm_packages
 
-# AWS Lambda Archives
+# AWS Lambda Deployment Packages
 *.zip
