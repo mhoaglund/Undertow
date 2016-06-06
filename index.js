@@ -1,7 +1,28 @@
 var rita = require("rita"),
+scraper = require("scrape-it"),
+nlp = require("nlp_compromise"),
 twilio = require('twilio');
 
 //This should be a triptych, ending with an OSS directive.
+
+//Start with an aphorism!
+var Aphorisms = [
+    'The biggest piece of propaganda',
+    'Knowing is half the battle',
+    'You havent got a lot on your mind',
+    'Remind yourself that leisure is not work while you still can',
+    'While you still can',
+    'Knowing is none of the battle',
+    'Try to remember a time when you werent disgusted',
+    'One of the chances is your last chance',
+    'You dont have to know what is wrong with anyone, but you have to fulfill your obligation to them', 
+    'If a stranger directs their anger toward you, you should have helped them sooner',
+    'You cant use the same names for people or things forever',
+    'Being nourished is more important than understanding what is happening',
+    'Taste is poor',
+    'Be a perfectionist and learn the sickening feeling of flawed work',
+    '' 
+];
 
 var OSSdirectives = [
     'A clean factory is not susceptible to fire, but a dirty one is.',
@@ -25,19 +46,71 @@ var OSSdirectives = [
     'Cry or sob hysterically at every occasion, especially when confronted by government clerks.',
     'Always be profuse with your apologies.'
 ];
-exports.handler = function(event, context) {
-    var twiml = new twilio.TwimlResponse();
-    twiml.say({voice:'woman'}, 'Oh,,,,,,');
-    twiml.say({voice:'woman'}, 'When it arrives you wont know');
-    var output = '<?xml version="1.0" encoding="UTF-8"?>' + twiml.toString() + '</Response>';
-    context.succeed(output);
-};
+
+// *** prod lambda handler
+// exports.handler = function(event, context) {
+//     var twiml = new twilio.TwimlResponse();
+//     twiml.say({voice:'woman'}, 'Hm,,,,,,Part One,,,,,,');
+//     twiml.say({voice:'woman'}, 'When it arrives you wont know,,,,');
+//     //module one
+//     twiml.say({voice:'woman'}, ',,,,,,Part Two,,,,,,');
+//     twiml.say({voice:'woman'}, 'So far,, so good,,,,');
+//     //module two
+//     twiml.say({voice:'woman'}, ',,,,,,Part Three,,,,,,');
+//     twiml.say({voice:'woman'}, 'To Do,,,,');
+//     //module three
+//     var output = '<?xml version="1.0" encoding="UTF-8"?>' + twiml.toString() + '</Response>';
+//     context.succeed(output);
+// };
 
 //using this for debugging responses
-// var http = require('http');
-// http.createServer(function (req, res) {
-//   res.writeHead(200, {'Content-Type': 'text/plain'});
-//   var twiml = new twilio.TwimlResponse();
-//   twiml.say({voice:'woman'}, 'Pain,,,,,Ruin');
-//   res.end(twiml.toString());
-// }).listen(8124, "127.0.0.1");
+var http = require('http');
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  var twiml = new twilio.TwimlResponse();
+  twiml.say({voice:'woman'}, 'Pain,,,,,Ruin');
+  //RetrieveSeed("https://en.wikipedia.org/wiki/J_Dilla");
+  res.end(twiml.toString());
+}).listen(8124, "127.0.0.1");
+
+RetrieveSeed("https://en.wikipedia.org/wiki/J_Dilla");
+
+//Objective: clear proper names and companies out of text.
+function StripPropers(input, callback){
+    callback();
+}
+
+function AggregateArrayPropertyToString(propertyname, arr, callback){
+    var aggregate = "";
+    for (var i=0,  tot=arr.length; i < tot; i++) {
+        aggregate += arr[i][propertyname];
+        aggregate += " ";
+        if(i == (tot-1)){
+            callback(aggregate);
+        }
+    }
+}
+
+//Objective: grab sample text from a domain
+function RetrieveSeed(input){
+    scraper(input, {
+        // Fetch the articles
+        fragments: {
+            listItem: ".mw-content-ltr > div.hatnote"
+            //data doesn't end up as a property, FYI
+        , data: {
+               content: {
+                //listItem: "p",
+                how: "text"
+                }
+            }
+        }
+    }, (err, page) => {
+        //console.log(err || page);
+        if(!err){
+            AggregateArrayPropertyToString("content", page.fragments, function(data){
+                console.log("Page Dump:" + data);
+            })
+        }
+    });
+}
